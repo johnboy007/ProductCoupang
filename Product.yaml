@@ -1,0 +1,257 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Product Api
+  description: <h3>An API for Global Product Ingestion</h3>
+paths:
+  '/api/v1/products/{product_id}':
+    put:
+      tags:
+        - Coupang
+      operationId: PutTest
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      produces: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: string
+        - name: product
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/CoupangProduct'
+      responses:
+        '200':
+          description: Success
+        '201':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  CoupangProduct:
+    required:
+      - product_id
+      - vendor_partner
+      - main_image
+      - status
+      - title
+      - description
+      - brand
+      - country_of_origin
+      - fabric_composition
+      - category
+      - items
+    type: object
+    properties:
+      product_id:
+        description: The product id
+        type: string
+      vendor_partner:
+        description: 'The vendor partner [Fanatics]'
+        type: string
+      main_image:
+        description: Uri of the main product image
+        type: string
+      alternate_images:
+        description: Uri of the alternate product image
+        uniqueItems: false
+        type: array
+        items:
+          type: string
+      status:
+        description: '"Status of a product: NonAvailable, Available, Discontinued"'
+        enum:
+          - NonAvailable
+          - Available
+          - Discontinued
+        type: string
+      title:
+        description: The product name
+        type: string
+      description:
+        description: Description of the product
+        type: string
+      brand:
+        description: Brand of the product
+        type: string
+      association:
+        type: string
+      league:
+        type: string
+      team:
+        type: string
+      player_name:
+        type: string
+      all_sizes:
+        description: All the created sizes for the product items
+        uniqueItems: false
+        type: array
+        items:
+          type: string
+      country_of_origin:
+        description: The country the product was manufactured in
+        type: string
+      fulfillment_region:
+        description: 'Region the product will be fulfilled from [US/ EU]'
+        type: string
+      color:
+        description: Color of the product
+        type: string
+      uk_commodity_code:
+        description: >-
+          Used to classify any goods being imported or exported.
+          https://www.gov.uk/trade-tariff
+        type: string
+      fabric_composition:
+        description: Fabric material composition in percectages
+        type: string
+      washing_instructions:
+        description: Washing instructions for the product
+        type: string
+      search_keywords:
+        description: Search keywords for the product
+        type: string
+      manufacture_date:
+        description: Manufacture date for the product in YYYY/MM/DD
+        type: string
+      gender:
+        description: 'Female, Male, Unisex'
+        enum:
+          - Female
+          - Male
+          - Unisex
+        type: string
+      age_groups:
+        description: 'List of age groups: Baby, Toddler, Child, Adult'
+        uniqueItems: false
+        type: array
+        items:
+          enum:
+            - Baby
+            - Toddler
+            - Child
+            - Adult
+          type: string
+      category:
+        $ref: '#/definitions/CategoryC'
+      attributes:
+        description: Key Value pairs of attributes of the product
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/AttributesC'
+      items:
+        description: List of unique items. One item per SKU/Barcode
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/ItemC'
+      size_charts:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/SizeChartC'
+  CategoryC:
+    type: object
+    properties:
+      name:
+        type: string
+      childCategories:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/CategoryC'
+  AttributesC:
+    type: object
+    properties:
+      description:
+        type: string
+      type:
+        type: string
+  ItemC:
+    required:
+      - item_id
+      - sku_id
+      - barcode
+      - msrp
+      - sale_price
+      - currency_code
+      - width
+      - height
+      - length
+      - weight
+    type: object
+    properties:
+      item_id:
+        description: Unique id of the item
+        type: string
+      sku_id:
+        description: 'description": "SKU id of the item'
+        type: string
+      barcode:
+        description: Barcode id of the item
+        type: string
+      msrp:
+        format: double
+        description: MSRP of the item
+        type: number
+      sale_price:
+        format: double
+        description: Selling price of the item
+        type: number
+      currency_code:
+        description: 'ISO standard currency code used for the prices [USD, KRW, GBP]'
+        type: string
+      width:
+        format: double
+        description: Dimensions in mm
+        type: number
+      height:
+        description: Dimensions in mm
+        type: string
+      length:
+        format: double
+        description: Dimensions in mm
+        type: number
+      weight:
+        format: double
+        description: Dimensions in grams
+        type: number
+      size:
+        type: string
+      attributes:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/AttributesC'
+  SizeChartC:
+    type: object
+    properties:
+      title:
+        type: string
+      rows:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/SizeChartRowC'
+  SizeChartRowC:
+    type: object
+    properties:
+      values:
+        uniqueItems: false
+        type: array
+        items:
+          type: string
+tags:
+  - name: Coupang
+    description: 'Update, Create'
+
+    
